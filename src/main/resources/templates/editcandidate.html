@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Edit Candidate</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', 'Arial', sans-serif;
+            background: linear-gradient(135deg, #6d5efc 0%, #00d4ff 100%);
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 32px;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.5);
+            box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 20px;
+            color: #1976d2;
+            font-weight: 600;
+        }
+        label {
+            display: block;
+            text-align: left;
+            margin-top: 15px;
+            font-weight: 500;
+            color: #333;
+        }
+        input[type="text"], input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            margin-top: 5px;
+            border: 2px solid #d6e4ff;
+            border-radius: 10px;
+            font-family: inherit;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        input[type="text"]:focus, input[type="file"]:focus {
+            border-color: #1976d2;
+            box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.15);
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 13px;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: inherit;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+            margin-top: 20px;
+            box-shadow: 0 8px 20px rgba(17, 153, 142, 0.35);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.06);
+            box-shadow: 0 12px 26px rgba(56, 239, 125, 0.45);
+        }
+        .error {
+            color: #d32f2f;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        @media (max-width: 600px) {
+            h2 { font-size: 24px; }
+            button { font-size: 14px; }
+            input[type="text"], input[type="file"] { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Edit Candidate</h2>
+    <form method="post" action="/admin/updateCandidate" enctype="multipart/form-data" th:object="${candidate}">
+        <input type="hidden" name="id" th:value="${candidate.id}" />
+
+        <label>Candidate Name:</label>
+        <input type="text" name="candidateName" th:value="${candidate.candidateName}" required />
+
+        <label>Party Name:</label>
+        <input type="text" name="partyName" th:value="${candidate.partyName}" required />
+
+        <label>Change Party Symbol (optional):</label>
+        <input type="file" name="partySymbol" accept="image/*" />
+
+        <label>Change Candidate Photo (optional):</label>
+        <input type="file" name="candidatePhoto" accept="image/*" />
+
+        <button type="submit">Update Candidate</button>
+        <div class="error" th:if="${error}" th:text="${error}"></div>
+    </form>
+</div>
+
+</body>
+</html>

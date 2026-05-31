@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Online Voting System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --accent-1: #6d5efc;
+            --accent-2: #00d4ff;
+            --grad: linear-gradient(135deg, #6d5efc 0%, #00d4ff 100%);
+        }
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', 'Verdana', sans-serif;
+            background: url('/images/4448.jpg') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            color: #f0f0f0;
+            text-align: center;
+            position: relative;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(circle at 20% 20%, rgba(109,94,252,0.35), transparent 45%),
+                        radial-gradient(circle at 80% 80%, rgba(0,212,255,0.30), transparent 45%),
+                        rgba(6, 10, 28, 0.55);
+            z-index: 0;
+        }
+        .container {
+            position: relative;
+            z-index: 1;
+            background: rgba(15, 20, 40, 0.55);
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            padding: 50px;
+            border-radius: 22px;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255,255,255,0.12);
+            width: 90%;
+            max-width: 450px;
+        }
+        h2 {
+            margin-bottom: 28px;
+            font-size: 30px;
+            font-weight: 600;
+            color: #ffffff;
+            letter-spacing: 0.3px;
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: var(--grad);
+            border: none;
+            color: white;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: 500;
+            font-family: inherit;
+            margin: 10px 0;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+            box-shadow: 0 8px 22px rgba(109, 94, 252, 0.45);
+        }
+        button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.08);
+            box-shadow: 0 12px 28px rgba(0, 212, 255, 0.5);
+        }
+        .icon {
+            font-size: 24px;
+            margin-right: 10px;
+        }
+        .footer {
+            margin-top: 22px;
+            font-size: 12px;
+            color: rgba(255,255,255,0.75);
+        }
+        .public-results-button {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 2;
+            background: linear-gradient(135deg, #16c79a, #00d4ff);
+            padding: 10px 14px;
+            border: none;
+            border-radius: 12px;
+            color: white;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            width: 130px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            box-shadow: 0 8px 18px rgba(0, 212, 255, 0.4);
+        }
+        .public-results-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(22, 199, 154, 0.55);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 600px) {
+            h2 { font-size: 24px; }
+            .container { padding: 30px; }
+            button { font-size: 16px; }
+            .public-results-button {
+                font-size: 12px;
+                padding: 8px 10px;
+                width: 110px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<button class="public-results-button" onclick="window.location.href='results'">
+    Public Results
+</button>
+
+<div class="container">
+    <h2>Welcome to the Online Voting System</h2>
+    <button onclick="window.location.href='/voter/login'">
+        <i class="fas fa-user-check icon"></i> Voter Login
+    </button>
+    <button onclick="window.location.href='/admin/login'">
+        <i class="fas fa-user-lock icon"></i> Admin Login
+    </button>
+    <div class="footer">© 2025 All Rights Reserved</div>
+</div>
+
+</body>
+</html>

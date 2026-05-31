@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vote Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #e0f7fa 100%);
+            margin: 0;
+            padding: 14px;
+            min-height: 100vh;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 18px;
+            background: rgba(255,255,255,0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: 14px;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+            margin-bottom: 10px;
+        }
+
+        .welcome-text {
+            font-size: 20px;
+            font-weight: 500;
+            color: #1f2a44;
+        }
+
+        .logout-button {
+            background: linear-gradient(135deg, #ff5f6d, #dc3545);
+            color: white;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            font-family: inherit;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            box-shadow: 0 6px 16px rgba(220, 53, 69, 0.35);
+        }
+
+        .logout-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 22px rgba(220, 53, 69, 0.45);
+        }
+
+        h2 {
+            color: #1f2a44;
+            text-align: center;
+            margin: 18px 0 24px;
+            font-size: 26px;
+            font-weight: 600;
+        }
+
+        .message, .error {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding: 12px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .message {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .error {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .candidate-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .candidate-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.6);
+            border-radius: 18px;
+            width: 100%;
+            max-width: 300px;
+            padding: 20px;
+            box-shadow: 0 12px 30px rgba(31, 42, 68, 0.12);
+            text-align: center;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .candidate-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 20px 40px rgba(109, 94, 252, 0.22);
+        }
+
+        .candidate-card img {
+            width: 100px;
+            height: 100px;
+            object-fit: contain;
+            margin: 10px 0;
+            border-radius: 10px;
+        }
+
+        .candidate-card h3 {
+            margin: 5px 0;
+            color: #5847f0;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .candidate-card p {
+            margin: 5px 0;
+            color: #555;
+            font-size: 16px;
+        }
+
+        .vote-button {
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            padding: 12px;
+            width: 100%;
+            border: none;
+            border-radius: 10px;
+            margin-top: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            font-family: inherit;
+            transition: transform 0.25s ease, box-shadow 0.25s ease, filter 0.25s ease;
+            box-shadow: 0 6px 16px rgba(17, 153, 142, 0.35);
+        }
+
+        .vote-button:hover {
+            transform: translateY(-2px);
+            filter: brightness(1.06);
+            box-shadow: 0 10px 22px rgba(56, 239, 125, 0.45);
+        }
+
+        @media (max-width: 600px) {
+            .candidate-card {
+                width: 100%;
+            }
+
+            .logout-button {
+                padding: 8px 12px;
+                font-size: 14px;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            .welcome-text {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="top-bar">
+    <div th:if="${username}" class="welcome-text" th:text="'Welcome, ' + ${username} + '!'"></div>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="logout-button">Logout</button>
+    </form>
+</div>
+
+<h2>Vote for Your Preferred Candidate</h2>
+
+<div th:if="${message}" class="message" th:text="${message}"></div>
+<div th:if="${error}" class="error" th:text="${error}"></div>
+
+<div class="candidate-container">
+    <div th:each="candidate : ${candidates}" class="candidate-card">
+        <h3 th:text="${candidate.candidateName}">Candidate Name</h3>
+        <p th:text="${candidate.partyName}">Party Name</p>
+        <img th:src="@{${candidate.partySymbolPath}}" alt="Party Symbol" />
+        <img th:src="@{${candidate.candidatePhotoPath}}" alt="Candidate Photo" />
+        <form method="post" th:action="@{/vote}">
+            <input type="hidden" name="candidateId" th:value="${candidate.id}" />
+            <input type="hidden" name="username" th:value="${username}" />
+            <button type="submit" class="vote-button">Vote</button>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
+

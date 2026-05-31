@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Voter Activation</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            font-family: 'Poppins', Arial, sans-serif;
+            background: linear-gradient(135deg, #eef2ff 0%, #e6f7fb 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(255,255,255,0.75);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            padding: 16px 22px;
+            border-radius: 16px;
+            box-shadow: 0 8px 22px rgba(31,42,68,0.08);
+            margin-bottom: 24px;
+        }
+        .topbar h1 {
+            margin: 0;
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #6d5efc, #00d4ff);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .btn {
+            background: linear-gradient(135deg, #6d5efc, #00d4ff);
+            color: white;
+            border: none;
+            cursor: pointer;
+            padding: 10px 18px;
+            border-radius: 10px;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            font-family: inherit;
+            display: inline-block;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+            box-shadow: 0 6px 16px rgba(109,94,252,0.3);
+        }
+        .btn:hover { transform: translateY(-2px); filter: brightness(1.06); box-shadow: 0 10px 22px rgba(0,212,255,0.4); }
+        .btn-accept { background: linear-gradient(135deg, #11998e, #38ef7d); box-shadow: 0 6px 16px rgba(17,153,142,0.3); }
+        .btn-reject { background: linear-gradient(135deg, #ff5f6d, #dc3545); box-shadow: 0 6px 16px rgba(220,53,69,0.3); }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        .vcard {
+            background: rgba(255,255,255,0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.6);
+            border-radius: 18px;
+            padding: 18px;
+            box-shadow: 0 12px 30px rgba(31,42,68,0.10);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .vcard:hover { transform: translateY(-4px); box-shadow: 0 20px 40px rgba(109,94,252,0.18); }
+        .aadhaar-img {
+            width: 100%;
+            height: 170px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid #e6e9f0;
+            background: #f4f6fb;
+            cursor: zoom-in;
+        }
+        .vrow { margin: 8px 0; font-size: 14px; color: #333; }
+        .vrow b { color: #1f2a44; }
+        .enc-pass {
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            color: #6d5efc;
+            word-break: break-all;
+            background: rgba(109, 94, 252, 0.08);
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+        .status-pill {
+            display: inline-block;
+            padding: 3px 12px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 600;
+            background: #fff8e1;
+            color: #8a6d00;
+            border: 1px solid #ffca28;
+        }
+        .actions { display: flex; gap: 10px; margin-top: 14px; }
+        .actions form { flex: 1; margin: 0; }
+        .actions button { width: 100%; }
+        .empty {
+            background: rgba(255,255,255,0.85);
+            border-radius: 16px;
+            padding: 40px;
+            text-align: center;
+            color: #555;
+            box-shadow: 0 12px 30px rgba(31,42,68,0.08);
+        }
+
+        /* Toast */
+        #toast {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, #11998e, #38ef7d);
+            color: white;
+            padding: 12px 22px;
+            border-radius: 10px;
+            box-shadow: 0 10px 24px rgba(17,153,142,0.4);
+            z-index: 999;
+        }
+
+        /* Image lightbox */
+        .lightbox {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .lightbox img { max-width: 95%; max-height: 95%; border-radius: 10px; }
+
+        @media (max-width: 600px) {
+            .topbar { flex-direction: column; gap: 12px; align-items: stretch; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+
+<div id="toast" th:if="${toastMessage}" th:text="${toastMessage}"></div>
+
+<div class="topbar">
+    <h1>Voter Activation</h1>
+    <a href="/admin/dashboard" class="btn">← Back to Dashboard</a>
+</div>
+
+<div th:if="${#lists.isEmpty(pendingVoters)}" class="empty">
+    <h3>No pending voter requests</h3>
+    <p>All registration requests have been processed.</p>
+</div>
+
+<div class="cards" th:unless="${#lists.isEmpty(pendingVoters)}">
+    <div class="vcard" th:each="voter : ${pendingVoters}">
+        <img class="aadhaar-img"
+             th:if="${voter.aadhaarImagePath}"
+             th:src="@{${voter.aadhaarImagePath}}"
+             alt="Aadhaar card"
+             onclick="openLightbox(this.src)"
+             onerror="this.alt='Aadhaar image not available'; this.style.cursor='default';" />
+        <div class="aadhaar-img" th:unless="${voter.aadhaarImagePath}"
+             style="display:flex;align-items:center;justify-content:center;color:#999;">
+            No Aadhaar image
+        </div>
+
+        <div class="vrow"><b>Username:</b> <span th:text="${voter.username}"></span></div>
+        <div class="vrow"><b>Password:</b>
+            <span class="enc-pass"
+                  th:text="${voter.encryptedPassword != null ? voter.encryptedPassword : '********'}">********</span>
+        </div>
+        <div class="vrow"><b>Registered:</b>
+            <span th:text="${voter.registrationDate != null ? #temporals.format(voter.registrationDate, 'yyyy-MM-dd HH:mm') : 'N/A'}"></span>
+        </div>
+        <div class="vrow"><b>Status:</b> <span class="status-pill">Pending</span></div>
+
+        <div class="actions">
+            <form th:action="@{/admin/voterActivation/accept}" method="post">
+                <input type="hidden" name="id" th:value="${voter.id}" />
+                <button type="submit" class="btn btn-accept">Accept</button>
+            </form>
+            <form th:action="@{/admin/voterActivation/reject}" method="post">
+                <input type="hidden" name="id" th:value="${voter.id}" />
+                <button type="submit" class="btn btn-reject">Reject</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="lightbox" id="lightbox" onclick="this.style.display='none'">
+    <img id="lightboxImg" src="" alt="Aadhaar full view" />
+</div>
+
+<script>
+    function openLightbox(src) {
+        const lb = document.getElementById('lightbox');
+        document.getElementById('lightboxImg').src = src;
+        lb.style.display = 'flex';
+    }
+    // Auto-hide toast
+    const toast = document.getElementById('toast');
+    if (toast) { setTimeout(() => { toast.style.display = 'none'; }, 3500); }
+</script>
+</body>
+</html>
